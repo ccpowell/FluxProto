@@ -1,5 +1,6 @@
 import React from 'react';
 import {Container} from 'flux/utils';
+import * as _ from 'lodash';
 
 import transactionStore from '../stores/TransactionStore';
 import uiStore from '../stores/UiStore';
@@ -10,6 +11,7 @@ import uiActions from '../actions/UiActions';
 import Content from './Content';
 import Header from './Header';
 import MainMenu from './MainMenu';
+import Login from './Login';
 
 class App extends React.Component {
     static getStores() {
@@ -19,6 +21,8 @@ class App extends React.Component {
     static calculateState(prevState) {
         let uiState = uiStore.getState();
         return {
+            isLoggedIn: uiState.userId != null,
+            userId: uiState.userId,
             transactions: transactionStore.getAll(),
             currentPage: uiState.currentPage,
             currentModal: uiState.currentModal,
@@ -66,28 +70,32 @@ class App extends React.Component {
      * @return {object}
      */
     render() {
-        return (
-            <div>
-                <MainMenu
-                    selectedItem={this.state.currentPage}>
-                </MainMenu>
+        if (_.isString(this.state.userId)) {
+            return (
+                <div>
+                    <MainMenu
+                        selectedItem={this.state.currentPage}>
+                    </MainMenu>
 
-                <Header>
-                </Header>
+                    <Header>
+                    </Header>
 
-                <Content
-                    sizes={this.state.sizes}
-                    transactions={this.state.transactions}
-                    currentModal={this.state.currentModal}
-                    editTransaction={this.state.editTransaction}
-                    selectedPage={this.state.currentPage}>
-                </Content>
-            </div>
-        );
+                    <Content
+                        sizes={this.state.sizes}
+                        transactions={this.state.transactions}
+                        currentModal={this.state.currentModal}
+                        editTransaction={this.state.editTransaction}
+                        selectedPage={this.state.currentPage}>
+                    </Content>
+                </div>
+            );
+        } else {
+            return (
+                <Login/>
+            );
+        }
     }
 }
 
 export default Container.create(App);
 
-// initial fetch of data
-transactionActions.getAll();

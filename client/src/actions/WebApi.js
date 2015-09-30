@@ -7,6 +7,7 @@ let request = require('browser-request');
 
 import uiStore from '../stores/UiStore';
 import transactionActions from './TransactionActions';
+import uiActions from './UiActions';
 
 function isError(error, response) {
     if (error) {
@@ -56,8 +57,29 @@ class WebApi {
         request.get({uri, json: true}, handleFetch(token));
     }
 
+    /**
+     * Authenticate and get user profile.
+     * @param token
+     * @param username
+     * @param password
+     */
     login(token, username, password) {
-        // authenticate and get user profile
+        uiActions.start(token);
+
+        let data = {
+            username,
+            password
+        };
+        request.post({uri: '/api/login', json: data}, function(error, response, data) {
+            let badNews = isError(error, response);
+            if (badNews) {
+                console.log('login failed', badNews);
+                uiActions.failure(token, badNews);
+            } else {
+                uiActions.loggedIn(token, data);
+                this.getTransactions(null);
+            }
+        });
     }
 }
 

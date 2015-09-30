@@ -11,7 +11,8 @@ class UiStore extends Store {
     constructor(dispatcher) {
         super(dispatcher);
         this.state = {
-            userId: 'MrHyde',
+            userId: null,
+            userProfile: null,
             currentPage: 'Home',
             currentModal: null,
             currentModalToken: null,
@@ -61,6 +62,7 @@ class UiStore extends Store {
 
             // use correlation token
             // listen to all network operations
+            case Constants.UI_OPERATION_SUCCESS:
             case Constants.TRANSACTION_OPERATION_SUCCESS:
                 if (this.state.currentModalToken === action.token) {
                     this.state.currentModalToken = null;
@@ -71,16 +73,28 @@ class UiStore extends Store {
 
             // use correlation token
             // listen to all network operations
+            case Constants.UI_OPERATION_FAILURE:
             case Constants.TRANSACTION_OPERATION_FAILURE:
                 if (this.state.currentModalToken === action.token) {
                     this.state.currentModalToken = null;
-                    this.state.currentModalError = payload.toString();
+                    this.state.currentModalError = action.payload.toString();
                 }
                 this.__emitChange();
                 break;
 
             case Constants.SET_WINDOW_SIZES:
                 this.state.sizes = action.payload;
+                this.__emitChange();
+                break;
+
+            case Constants.LOGGED_IN:
+                // not sure login counts as a modal...
+                if (this.state.currentModalToken === action.token) {
+                    this.state.currentModalToken = null;
+                    this.state.currentModal = null;
+                }
+                this.state.userProfile = action.payload;
+                this.state.userId = this.state.userProfile.userId;
                 this.__emitChange();
                 break;
         }
