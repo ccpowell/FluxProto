@@ -74,7 +74,9 @@ router.put('/transactions', function (req, res) {
         .then(function () {
             transactions.getAllByUserId(userId)
                 .then(function (all) {
-                    res.json(all);
+                    setTimeout(function() {
+                        res.json(all);
+                    }, 5000);
                 })
                 .catch(function (err) {
                     console.log(err);
@@ -88,7 +90,9 @@ router.post('/login', function(req, res) {
     let profile = {
         userId: username
     };
-    res.json(profile);
+    setTimeout(function() {
+        res.json(profile);
+    }, 5000);
 });
 
 export {router as default};

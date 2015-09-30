@@ -38,6 +38,11 @@ This is the parent `<div>` that contains everything.
   line-height: 1.6em;
 }
 
+.login {
+  margin: 50;
+  color: #333;
+}
+
 .header {
   margin: 0;
   color: #333;
@@ -69,6 +74,24 @@ This is the parent `<div>` that contains everything.
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
+
+  .spinner-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.3);
+    text-align: center;
+    z-index: 1000;
+  }
+
+    .spinner {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      font-size: 50px;
+    }
 
 .ReactModalDialog {
   box-sizing: border-box;
@@ -114,13 +137,13 @@ This is the parent `<div>` that contains everything.
   }
 }
 
-  .positive-money {
-    color: #00A000;
-  }
+.positive-money {
+  color: #00A000;
+}
 
-  .negative-money {
-    color: #ff0000;
-  }
+.negative-money {
+  color: #ff0000;
+}
 
 /* override default style */
 .public_fixedDataTableCell_cellContent {

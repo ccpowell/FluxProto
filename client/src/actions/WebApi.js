@@ -78,7 +78,7 @@ class WebApi {
                 uiActions.failure(token, badNews);
             } else {
                 uiActions.loggedIn(token, data);
-                self.getTransactions(null);
+                self.getTransactions(token);
             }
         });
     }

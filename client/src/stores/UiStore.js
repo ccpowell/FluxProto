@@ -18,7 +18,8 @@ class UiStore extends Store {
             currentModalToken: null,
             currentModalError: null,
             editTransaction: null,
-            asyncInProgress: []
+            asyncInProgress: [],
+            transactions: []
         };
     }
 
@@ -27,6 +28,9 @@ class UiStore extends Store {
     }
 
     __onDispatch(action) {
+
+        console.log(action);
+
         switch (action.type) {
             case Constants.CURRENT_MODAL_WAITING:
                 this.state.currentModalToken = action.token;
@@ -94,6 +98,18 @@ class UiStore extends Store {
                 this.__emitChange();
                 break;
 
+            case Constants.TRANSACTIONS_SUCCESS:
+                if (this.state.currentModalToken === action.token) {
+                    this.state.currentModalToken = null;
+                    this.state.currentModal = null;
+                }
+                _.remove(this.state.asyncInProgress, {token: action.token});
+
+
+                this.state.transactions = UiStore.cleanTransactions(action.payload);
+                this.__emitChange();
+                break;
+
             case Constants.LOGIN_SUCCESS:
                 // not sure login counts as a modal...
                 if (this.state.currentModalToken === action.token) {
@@ -106,6 +122,23 @@ class UiStore extends Store {
                 this.__emitChange();
                 break;
         }
+    }
+
+
+    static cleanTransactions(transactions) {
+        return transactions.map(t => {
+            return {
+                id: t.id,
+                userId: t.userId,
+                date: new Date(t.date),
+                description: t.description,
+                amount: parseFloat(t.amount) || 0.0,
+                category: t.category,
+                tags: t.tags,
+                accountFrom: t.accountFrom,
+                accountTo: t.accountTo
+            };
+        });
     }
 }
 

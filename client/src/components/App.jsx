@@ -2,9 +2,7 @@ import React from 'react';
 import {Container} from 'flux/utils';
 import * as _ from 'lodash';
 
-import transactionStore from '../stores/TransactionStore';
 import uiStore from '../stores/UiStore';
-import loggingStore from '../stores/LoggingStore';
 import transactionActions from '../actions/TransactionActions';
 import uiActions from '../actions/UiActions';
 
@@ -15,7 +13,7 @@ import Login from './Login';
 
 class App extends React.Component {
     static getStores() {
-        return [transactionStore, uiStore];
+        return [uiStore];
     }
 
     static calculateState(prevState) {
@@ -23,11 +21,12 @@ class App extends React.Component {
         return {
             isLoggedIn: uiState.userId != null,
             userId: uiState.userId,
-            transactions: transactionStore.getAll(),
+            transactions: uiState.transactions,
             currentPage: uiState.currentPage,
             currentModal: uiState.currentModal,
             editTransaction: uiState.editTransaction,
-            sizes: uiState.sizes
+            sizes: uiState.sizes,
+            isAsyncActive: (uiState.asyncInProgress.length > 0)
         };
     }
 
@@ -70,6 +69,20 @@ class App extends React.Component {
      * @return {object}
      */
     render() {
+        let spinner = null;
+
+        console.log(uiStore.getState().asyncInProgress);
+
+        if (this.state.isAsyncActive) {
+            spinner = (
+                <div className="spinner-backdrop">
+                    <div className="spinner">
+                        <i className="fa fa-spinner fa-pulse"/>
+                    </div>
+                </div>
+            );
+        }
+
         if (this.state.isLoggedIn) {
             return (
                 <div>
@@ -87,11 +100,15 @@ class App extends React.Component {
                         editTransaction={this.state.editTransaction}
                         selectedPage={this.state.currentPage}>
                     </Content>
+                    {spinner}
                 </div>
             );
         } else {
             return (
-                <Login/>
+                <div>
+                    <Login/>
+                    {spinner}
+                </div>
             );
         }
     }

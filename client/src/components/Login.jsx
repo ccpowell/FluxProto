@@ -37,7 +37,7 @@ export default class Header extends React.Component {
      */
     render() {
         return (
-            <div className="header">
+            <div className="login">
                 <h1>Please Log In</h1>
                 <div>Enter your user name and password.</div>
                 <form
