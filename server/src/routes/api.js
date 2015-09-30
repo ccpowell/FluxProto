@@ -83,4 +83,12 @@ router.put('/transactions', function (req, res) {
         });
 });
 
+router.post('/login', function(req, res) {
+        let {username, password} = req.body;
+    let profile = {
+        userId: username
+    };
+    res.json(profile);
+});
+
 export {router as default};

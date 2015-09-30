@@ -17,7 +17,8 @@ class UiStore extends Store {
             currentModal: null,
             currentModalToken: null,
             currentModalError: null,
-            editTransaction: null
+            editTransaction: null,
+            asyncInProgress: []
         };
     }
 
@@ -60,25 +61,31 @@ class UiStore extends Store {
                 this.__emitChange();
                 break;
 
+            case Constants.ASYNC_STARTED:
+                let {token, payload} = action;
+                this.state.asyncInProgress.push({token, payload});
+                this.__emitChange();
+                break;
+            
             // use correlation token
             // listen to all network operations
-            case Constants.UI_OPERATION_SUCCESS:
-            case Constants.TRANSACTION_OPERATION_SUCCESS:
+            case Constants.ASYNC_SUCCESS:
                 if (this.state.currentModalToken === action.token) {
                     this.state.currentModalToken = null;
                     this.state.currentModal = null;
                 }
+                _.remove(this.state.asyncInProgress, {token: action.token});
                 this.__emitChange();
                 break;
 
             // use correlation token
             // listen to all network operations
-            case Constants.UI_OPERATION_FAILURE:
-            case Constants.TRANSACTION_OPERATION_FAILURE:
+            case Constants.ASYNC_FAILURE:
                 if (this.state.currentModalToken === action.token) {
                     this.state.currentModalToken = null;
                     this.state.currentModalError = action.payload.toString();
                 }
+                _.remove(this.state.asyncInProgress, {token: action.token});
                 this.__emitChange();
                 break;
 
@@ -87,7 +94,7 @@ class UiStore extends Store {
                 this.__emitChange();
                 break;
 
-            case Constants.LOGGED_IN:
+            case Constants.LOGIN_SUCCESS:
                 // not sure login counts as a modal...
                 if (this.state.currentModalToken === action.token) {
                     this.state.currentModalToken = null;
@@ -95,6 +102,7 @@ class UiStore extends Store {
                 }
                 this.state.userProfile = action.payload;
                 this.state.userId = this.state.userProfile.userId;
+                _.remove(this.state.asyncInProgress, {token: action.token});
                 this.__emitChange();
                 break;
         }

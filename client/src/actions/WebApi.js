@@ -14,14 +14,15 @@ function isError(error, response) {
         return error;
     }
     if (!(response.status >= 200 && response.status < 300)) {
-        var error = new Error(response.statusText);
-        error.response = response;
-        return error;
+        var err = new Error(response.statusText);
+        err.response = response;
+        return err;
     }
     return null;
 }
 
-// make a curried response handler
+// make a curried response handler for a transaction operation
+// they all end successfully in TRANSACTIONS_SUCCESS
 function handleFetch(token) {
     return (error, response, data) => {
         let badNews = isError(error, response);
@@ -65,19 +66,19 @@ class WebApi {
      */
     login(token, username, password) {
         uiActions.start(token);
-
+        let self = this;
         let data = {
             username,
             password
         };
-        request.post({uri: '/api/login', json: data}, function(error, response, data) {
+        request.post({uri: '/api/login', json: data}, function (error, response, data) {
             let badNews = isError(error, response);
             if (badNews) {
                 console.log('login failed', badNews);
                 uiActions.failure(token, badNews);
             } else {
                 uiActions.loggedIn(token, data);
-                this.getTransactions(null);
+                self.getTransactions(null);
             }
         });
     }

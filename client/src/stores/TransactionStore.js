@@ -20,7 +20,7 @@ class TransactionStore extends Store {
 
     __onDispatch(action) {
         switch (action.type) {
-            case Constants.TRANSACTION_OPERATION_SUCCESS:
+            case Constants.TRANSACTIONS_SUCCESS:
                 this.state.transactions = TransactionStore.cleanTransactions(action.payload);
                 this.__emitChange();
                 break;

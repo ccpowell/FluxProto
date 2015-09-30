@@ -15,6 +15,10 @@ let UiActions = {
 
     getOperationId,
 
+    /**
+     * A modal wants to start waiting for an async operation
+     * @returns {string} correlation token
+     */
     startWaiting() {
         let token = getOperationId();
         AppDispatcher.dispatch({
@@ -32,17 +36,6 @@ let UiActions = {
      */
     login: function(token, username, password) {
         web.login(token, username, password);
-    },
-
-    /**
-     * User has logged in. Save the user profile.
-     * @param payload {profile} user profile
-     */
-    loggedIn: function(token, payload) {
-        AppDispatcher.dispatch({
-            type: Constants.LOGGED_IN,
-            payload
-        });
     },
 
     /**
@@ -98,33 +91,36 @@ let UiActions = {
 
     /**
      * starting a network operation
+     * @param token {string} correlation token
      */
     start: function (token) {
         AppDispatcher.dispatch({
-            type: Constants.UI_OPERATION_STARTED,
+            type: Constants.ASYNC_STARTED,
             token
         });
     },
 
     /**
      * queue an error response
+     * @param token {string} correlation token
      * @param payload {Error} error
      */
     failure: function (token, payload) {
         AppDispatcher.dispatch({
-            type: Constants.UI_OPERATION_FAILURE,
+            type: Constants.ASYNC_FAILURE,
             token,
             payload
         });
     },
 
     /**
-     * received a list of transactions from the server
+     * received a user profile
+     * @param token {string} correlation token
      * @param payload {Transaction[]} list of transactions
      */
-    success: function (token, payload) {
+    loggedIn: function (token, payload) {
         AppDispatcher.dispatch({
-            type: Constants.UI_OPERATION_SUCCESS,
+            type: Constants.LOGIN_SUCCESS,
             token,
             payload
         });

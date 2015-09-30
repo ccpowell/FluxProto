@@ -34,11 +34,11 @@ class App extends React.Component {
     constructor() {
         super();
         this.bound = {
-            handleResize: this.handleResize.bind(this)
+            handleResize: App.handleResize.bind(this)
         }
     }
 
-    handleResize() {
+    static handleResize() {
         console.log('handleResize');
         let windowWidth = window.innerWidth;
         let windowHeight = window.innerHeight;
@@ -58,7 +58,7 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        this.handleResize();
+        App.handleResize();
         window.addEventListener('resize', this.bound.handleResize);
     }
 
@@ -70,7 +70,7 @@ class App extends React.Component {
      * @return {object}
      */
     render() {
-        if (_.isString(this.state.userId)) {
+        if (this.state.isLoggedIn) {
             return (
                 <div>
                     <MainMenu
