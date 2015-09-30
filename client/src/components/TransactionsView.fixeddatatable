@@ -1,0 +1,96 @@
+import React from 'react';
+import FixedDataTable from 'fixed-data-table';
+import TransactionDialog from './TransactionDialog';
+import uiActions from '../actions/UiActions';
+
+export default class TransactionsView extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.bound = {
+            rowClicked: this.rowClicked.bind(this),
+            renderEditCell: this.renderEditCell.bind(this)
+        };
+    }
+
+    rowClicked(event, index, row) {
+        uiActions.editTransaction(row);
+    }
+
+    renderEditCell(cellData,
+                   cellDataKey,
+                   rowData,
+                   rowIndex,
+                   columnData,
+                   width) {
+        return (
+            <i
+                className="fa fa-edit table-button"
+            />
+        );
+    }
+
+    render() {
+        var Table = FixedDataTable.Table;
+        var Column = FixedDataTable.Column;
+        let modal = null;
+        if (this.props.currentModal === 'Transaction') {
+            modal = (
+                <TransactionDialog
+                    editTransaction={this.props.editTransaction}
+                />
+            );
+        }
+
+        let rows = this.props.transactions.slice();
+        let now = new Date();
+        rows.sort((a, b) => {
+            return ((a.date ? a.date : now).getTime() - (b.date ? b.date : now).getTime());
+        });
+        let rowGetter = i => rows[i];
+
+        return (
+            <div className="fullsize">
+                <div>
+                    <button
+                        className="pure-button pure-button-primary"
+                        onClick={uiActions.addTransaction}>
+                        Add Transaction
+                    </button>
+                </div>
+                <Table
+                    onRowClick={this.bound.rowClicked}
+                    rowHeight={30}
+                    rowGetter={rowGetter}
+                    rowsCount={rows.length}
+                    width={this.props.width}
+                    height={this.props.height}
+                    headerHeight={50}>
+                    <Column
+                        label="Date"
+                        width={200}
+                        dataKey="date"
+                    />
+                    <Column
+                        label="Description"
+                        width={100}
+                        flexGrow={1}
+                        dataKey="description"
+                    />
+                    <Column
+                        label="Amount"
+                        width={100}
+                        dataKey="amount"
+                    />
+                    <Column
+                        label="Edit"
+                        width={75}
+                        cellRenderer={this.bound.renderEditCell}
+                        dataKey="id"
+                    />
+                </Table>
+                {modal}
+            </div>
+        )
+    }
+}

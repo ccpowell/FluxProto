@@ -1,0 +1,128 @@
+/*
+hfv is the top level element, and can be used overriding class styles from other libraries
+*/
+
+menu-width = 150px
+
+html, body {
+  height: 100%;
+  width: 100%;
+  background: whitesmoke;
+}
+
+.pure-img-responsive {
+  max-width: 100%;
+  height: auto;
+}
+
+.fullsize {
+  height: 100%;
+  width: 100%;
+}
+
+/*
+This is the parent `<div>` that contains everything.
+*/
+#hfv {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding-left: menu-width
+}
+
+.content {
+  margin: 0;
+  margin-bottom: 50px;
+  line-height: 1.6em;
+}
+
+.header {
+  margin: 0;
+  color: #333;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+.header h1 {
+  margin: 0.2em 0;
+  font-size: 2em;
+  font-weight: 300;
+}
+
+.header h2 {
+  font-size: 1.5em;
+  font-weight: 300;
+  color: #ccc;
+  padding: 0;
+  margin-top: 0;
+}
+
+.mainmenu {
+  width: menu-width;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background: #fff;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ReactModalDialog {
+  box-sizing: border-box;
+  position: relative;
+  background: white;
+  padding: 20px;
+  color: #333333;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+
+  .close-btn {
+    position: absolute;
+    top: 0;
+    left: -50px;
+    display: block;
+    width: 40px;
+    height: 40px;
+    transition: transform 0.1s;
+    border-radius: 10px;
+    color: red;
+    font-size: 30px;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  input {
+    width: 400px;
+  }
+
+  .short > input {
+    width: 100px;
+  }
+}
+
+.table-button {
+  cursor: pointer;
+  color: #000000;
+  &:hover {
+    transform: scale(1.1);
+    color: #0000FF;
+  }
+}
+
+  .positive-money {
+    color: #00A000;
+  }
+
+  .negative-money {
+    color: #ff0000;
+  }
+
+/* override default style */
+.public_fixedDataTableCell_cellContent {
+  padding: 4px;
+}

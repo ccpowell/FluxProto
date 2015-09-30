@@ -1,0 +1,117 @@
+import React from 'react';
+import {ModalContainer, ModalDialog} from 'react-modal-dialog';
+import uiActions from '../actions/UiActions';
+import transactionActions from '../actions/TransactionActions';
+let forms = require('newforms');
+
+let TransactionForm = forms.Form.extend({
+    date: forms.DateField(),
+    description: forms.CharField(),
+    amount: forms.DecimalField({decimalPlaces: 2})
+});
+
+export default class TransactionDialog extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.bound = {
+            trySaveTransaction: this.trySaveTransaction.bind(this)
+        };
+    }
+
+    trySaveTransaction(e) {
+        e.preventDefault();
+
+        let form = this.refs.transactionForm.getForm();
+        let isValid = form.validate();
+        console.log('isValid ' + isValid);
+
+        // wait for the operation to finish
+        let token = uiActions.startWaiting();
+        let info = {
+            date: React.findDOMNode(this.refs.date).value,
+            amount: parseFloat(React.findDOMNode(this.refs.amount).value),
+            description: React.findDOMNode(this.refs.description).value
+        };
+
+        if (this.props.editTransaction) {
+            let transaction = Object.assign({}, this.props.editTransaction, info);
+            transactionActions.update(token, transaction);
+        } else {
+            transactionActions.create(token, info);
+        }
+    }
+
+    /**
+     * @return {object}
+     */
+    render() {
+        let transaction = this.props.editTransaction || {
+                id: null,
+                date: new Date(),
+                description: null,
+                amount: null
+            };
+
+        let title = (
+            <h3>Add A Transaction</h3>
+        );
+        if (this.props.editTransaction) {
+            title = (
+                <h3>Edit Transaction</h3>
+            );
+        }
+
+        return (
+            <div>
+                <ModalContainer>
+                    <ModalDialog
+                        width={700}>
+                        <button
+                            className="close-btn"
+                            onClick={uiActions.closeModal}>
+                            <i className="fa fa-close"></i>
+                        </button>
+                        {title}
+                        <form
+                            className="pure-form pure-form-aligned">
+                            <forms.RenderForm
+                                form={TransactionForm}
+                                ref="transactionForm"/>
+                            <fieldset>
+                                <div className="pure-control-group">
+                                    <label>Date</label>
+                                    <input
+                                        type="text"
+                                        defaultValue={transaction.date}
+                                        ref="date"/>
+                                </div>
+                                <div className="pure-control-group">
+                                    <label>Description</label>
+                                    <input
+                                        type="text"
+                                        defaultValue={transaction.description}
+                                        ref="description"/>
+                                </div>
+                                <div className="pure-control-group">
+                                    <label>Amount</label>
+                                    <input
+                                        type="text"
+                                        defaultValue={transaction.amount}
+                                        ref="amount"/>
+                                </div>
+                                <div className="pure-controls">
+                                    <button
+                                        className="pure-button pure-button-primary"
+                                        onClick={this.bound.trySaveTransaction}>
+                                        Save
+                                    </button>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </ModalDialog>
+                </ModalContainer>
+            </div>
+        );
+    }
+}
