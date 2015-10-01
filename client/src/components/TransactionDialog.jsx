@@ -4,18 +4,6 @@ import uiActions from '../actions/UiActions';
 import transactionActions from '../actions/TransactionActions';
 let forms = require('newforms');
 
-let TransactionForm = forms.Form.extend({
-    date: forms.DateField({
-        widget: forms.DateInput({format: '%m/%d/%Y'}),
-        cssClass: 'pure-control-group short'
-    }),
-    description: forms.CharField({cssClass: 'pure-control-group'}),
-    amount: forms.DecimalField({
-        cssClass: 'pure-control-group short',
-        decimalPlaces: 2,
-        widget: forms.NumberInput()
-    })
-});
 
 export default class TransactionDialog extends React.Component {
 
@@ -53,20 +41,56 @@ export default class TransactionDialog extends React.Component {
      * @return {object}
      */
     render() {
-        let transaction = this.props.editTransaction || {
-                id: null,
-                date: new Date(),
-                description: null,
-                amount: null
-            };
+        console.log('render TransactionDialog');
+        let accountChoices = this.props.userProfile.accounts.map(a => [a,a]);
+        accountChoices.unshift(['','']);
+        let categoryChoices = this.props.userProfile.categories.map(c => [c,c]);
+        categoryChoices.unshift(['','']);
+        let tagChoices = this.props.userProfile.tags.map(t => [t,t]);
+        let TransactionForm = forms.Form.extend({
+            date: forms.DateField({
+                widget: forms.DateInput({format: '%m/%d/%Y'}),
+                cssClass: 'pure-control-group short'
+            }),
+            description: forms.CharField({
+                cssClass: 'pure-control-group'}),
+            amount: forms.DecimalField({
+                cssClass: 'pure-control-group short',
+                decimalPlaces: 2,
+                widget: forms.NumberInput()
+            }),
+            category: forms.ChoiceField({
+                choices: categoryChoices,
+                cssClass: 'pure-control-group'}),
+            accountFrom: forms.ChoiceField({
+                label: 'From',
+                choices: accountChoices,
+                cssClass: 'pure-control-group'}),
+            accountTo: forms.ChoiceField({
+                label: 'To',
+                choices: accountChoices,
+                cssClass: 'pure-control-group',
+                required: false}),
+            tags: forms.MultipleChoiceField({
+                choices: tagChoices,
+                required: false,
+                cssClass: 'pure-control-group'})
+        });
 
+        let transaction = null;
+        let initialTransaction = {
+            date: new Date()
+        };
         let title = (
             <h3>Add A Transaction</h3>
         );
+
         if (this.props.editTransaction) {
             title = (
                 <h3>Edit Transaction</h3>
             );
+            transaction = this.props.editTransaction;
+            initialTransaction = null;
         }
 
         return (
@@ -87,6 +111,7 @@ export default class TransactionDialog extends React.Component {
                                 labelSuffix=""
                                 form={TransactionForm}
                                 data={transaction}
+                                initial={initialTransaction}
                                 ref="transactionForm"/>
 
                             <div className="pure-controls">

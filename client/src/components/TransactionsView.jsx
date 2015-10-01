@@ -1,6 +1,6 @@
 import React from 'react';
+import shallowequal from 'shallowequal';
 import FixedDataTable from 'fixed-data-table';
-import TransactionDialog from './TransactionDialog';
 import uiActions from '../actions/UiActions';
 let time = require('isomorph/time');
 let is = require('isomorph/is');
@@ -27,12 +27,7 @@ export default class TransactionsView extends React.Component {
         );
     }
 
-    static renderDateCell(cellData,
-                   cellDataKey,
-                   rowData,
-                   rowIndex,
-                   columnData,
-                   width) {
+    static renderDateCell(cellData) {
         if (is.Date(cellData)) {
             let value = time.strftime(cellData, '%m/%d/%Y');
             return (
@@ -52,22 +47,27 @@ export default class TransactionsView extends React.Component {
         return null;
     }
 
-    render() {
-        var Table = FixedDataTable.Table;
-        var Column = FixedDataTable.Column;
-        let modal = null;
-        if (this.props.currentModal === 'Transaction') {
-            modal = (
-                <TransactionDialog
-                    editTransaction={this.props.editTransaction}
-                />
-            );
-        }
+    // decide whether to update
+    shouldComponentUpdate(nextProps, nextState) {
+        // we don't use state
 
+        return !shallowequal(this.props, nextProps);
+    }
+
+    render() {
+        console.log('render TransactionsView');
+        let Table = FixedDataTable.Table;
+        let Column = FixedDataTable.Column;
+
+        // sort transactions by date, description
         let rows = this.props.transactions.slice();
         let now = new Date();
         rows.sort((a, b) => {
-            return ((a.date ? a.date : now).getTime() - (b.date ? b.date : now).getTime());
+            let neq = ((a.date || now).getTime() - (b.date || now).getTime());
+            if (!neq) {
+                neq = (a.description || '').localeCompare(b.description || '');
+            }
+            return neq;
         });
         let rowGetter = i => rows[i];
 
@@ -107,13 +107,17 @@ export default class TransactionsView extends React.Component {
                         cellRenderer={TransactionsView.renderMoneyCell}
                     />
                     <Column
+                        label="From"
+                        width={200}
+                        dataKey="accountFrom"
+                    />
+                    <Column
                         label="Edit"
                         width={75}
                         cellRenderer={TransactionsView.renderEditCell}
                         dataKey="id"
                     />
                 </Table>
-                {modal}
             </div>
         )
     }

@@ -11,6 +11,7 @@ export default class Content extends React.Component {
      * @return {object}
      */
     render() {
+        console.log('render Content');
         if (this.props.selectedPage === 'Images') {
             return (
                 <div className="content">
@@ -63,11 +64,11 @@ export default class Content extends React.Component {
                 <div className="content">
                     <h2>Current Transactions</h2>
                     <TransactionsView
+                        userProfile={this.props.userProfile}
                         width={this.props.sizes.bottomWidth - 20}
                         height={this.props.sizes.bottomHeight - 125}
-                        currentModal={this.props.currentModal}
                         transactions={this.props.transactions}
-                        editTransaction={this.props.editTransaction}
+                        transactionsId={this.props.transactionsId}
                     />
                 </div>
             );

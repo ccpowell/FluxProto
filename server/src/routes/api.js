@@ -74,9 +74,7 @@ router.put('/transactions', function (req, res) {
         .then(function () {
             transactions.getAllByUserId(userId)
                 .then(function (all) {
-                    setTimeout(function() {
-                        res.json(all);
-                    }, 5000);
+                    res.json(all);
                 })
                 .catch(function (err) {
                     console.log(err);
@@ -85,14 +83,15 @@ router.put('/transactions', function (req, res) {
         });
 });
 
-router.post('/login', function(req, res) {
-        let {username, password} = req.body;
+router.post('/login', function (req, res) {
+    let {username, password} = req.body;
     let profile = {
-        userId: username
+        userId: username,
+        categories: ['Transfer', 'House', 'Car', 'Food', 'Utilities', 'Telephone & Internet', 'Clothing'],
+        tags: ['Restaurant', 'Networking'],
+        accounts: ['Wells Fargo Checking', 'Wells Fargo Savings', 'Overdrawn AmEx', 'Citibank Visa', 'Out of my Hands']
     };
-    setTimeout(function() {
-        res.json(profile);
-    }, 5000);
+    res.json(profile);
 });
 
 export {router as default};

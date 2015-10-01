@@ -19,7 +19,8 @@ class UiStore extends Store {
             currentModalError: null,
             editTransaction: null,
             asyncInProgress: [],
-            transactions: []
+            transactions: [],
+            transactionsId: 0
         };
     }
 
@@ -55,6 +56,7 @@ class UiStore extends Store {
                 this.state.currentModal = 'Transaction';
                 this.state.currentModalToken = null;
                 this.state.currentModalError = null;
+                this.state.editTransaction = null;
                 this.__emitChange();
                 break;
 
@@ -105,8 +107,10 @@ class UiStore extends Store {
                 }
                 _.remove(this.state.asyncInProgress, {token: action.token});
 
-
+                // instead of immutable, just add an ID for the set
+                // be sure to check the ID!
                 this.state.transactions = UiStore.cleanTransactions(action.payload);
+                this.state.transactionsId += 1;
                 this.__emitChange();
                 break;
 
@@ -116,9 +120,10 @@ class UiStore extends Store {
                     this.state.currentModalToken = null;
                     this.state.currentModal = null;
                 }
+                _.remove(this.state.asyncInProgress, {token: action.token});
+
                 this.state.userProfile = action.payload;
                 this.state.userId = this.state.userProfile.userId;
-                _.remove(this.state.asyncInProgress, {token: action.token});
                 this.__emitChange();
                 break;
         }

@@ -19,6 +19,7 @@ export default class MainMenu extends React.Component {
      * @return {object}
      */
     render() {
+        console.log('render Menu');
         let selectedItem = this.props.selectedItem;
 
         function menuItemClass(name, divider=false) {

@@ -10,6 +10,7 @@ import Content from './Content';
 import Header from './Header';
 import MainMenu from './MainMenu';
 import Login from './Login';
+import TransactionDialog from './TransactionDialog';
 
 class App extends React.Component {
     static getStores() {
@@ -21,7 +22,9 @@ class App extends React.Component {
         return {
             isLoggedIn: uiState.userId != null,
             userId: uiState.userId,
+            userProfile: uiState.userProfile,
             transactions: uiState.transactions,
+            transactionsId: uiState.transactionsId,
             currentPage: uiState.currentPage,
             currentModal: uiState.currentModal,
             editTransaction: uiState.editTransaction,
@@ -69,6 +72,7 @@ class App extends React.Component {
      * @return {object}
      */
     render() {
+        console.log('render App');
         let spinner = null;
 
         console.log(uiStore.getState().asyncInProgress);
@@ -84,6 +88,16 @@ class App extends React.Component {
         }
 
         if (this.state.isLoggedIn) {
+            let modal = null;
+            if (this.state.currentModal === 'Transaction') {
+                modal = (
+                    <TransactionDialog
+                        userProfile={this.state.userProfile}
+                        editTransaction={this.state.editTransaction}
+                    />
+                );
+            }
+
             return (
                 <div>
                     <MainMenu
@@ -95,11 +109,12 @@ class App extends React.Component {
 
                     <Content
                         sizes={this.state.sizes}
+                        userProfile={this.state.userProfile}
                         transactions={this.state.transactions}
-                        currentModal={this.state.currentModal}
-                        editTransaction={this.state.editTransaction}
-                        selectedPage={this.state.currentPage}>
-                    </Content>
+                        transactionsId={this.state.transactionsId}
+                        selectedPage={this.state.currentPage}
+                        />
+                    {modal}
                     {spinner}
                 </div>
             );

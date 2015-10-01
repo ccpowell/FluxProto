@@ -36,6 +36,11 @@ This is the parent `<div>` that contains everything.
   margin: 0;
   margin-bottom: 50px;
   line-height: 1.6em;
+  padding: 1em;
+
+  .pure-button {
+    margin: 0 10px 10px 0;
+  }
 }
 
 .login {
@@ -75,23 +80,23 @@ This is the parent `<div>` that contains everything.
   -webkit-overflow-scrolling: touch;
 }
 
-  .spinner-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.3);
-    text-align: center;
-    z-index: 1000;
-  }
+.spinner-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  text-align: center;
+  z-index: 1000;
+}
 
-    .spinner {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      font-size: 50px;
-    }
+.spinner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-size: 50px;
+}
 
 .ReactModalDialog {
   box-sizing: border-box;
@@ -131,8 +136,9 @@ This is the parent `<div>` that contains everything.
 .table-button {
   cursor: pointer;
   color: #000000;
+
   &:hover {
-    transform: scale(1.1);
+    transform: scale(1.2);
     color: #0000FF;
   }
 }
@@ -143,6 +149,15 @@ This is the parent `<div>` that contains everything.
 
 .negative-money {
   color: #ff0000;
+}
+
+.pure-button:hover {
+  transform: scale(1.1);
+}
+
+.pure-menu-selected {
+  font-weight: bold;
+  font-size-adjust: 3;
 }
 
 /* override default style */
