@@ -52,6 +52,13 @@ class UiStore extends Store {
                 this.__emitChange();
                 break;
 
+            case Constants.SHOW_EDIT:
+                this.state.currentModal = Constants.Dialogs.Edit;
+                this.state.currentModalToken = null;
+                this.state.currentModalError = null;
+                this.__emitChange();
+                break;
+
             case Constants.ADD_TRANSACTION:
                 this.state.currentModal = 'Transaction';
                 this.state.currentModalToken = null;

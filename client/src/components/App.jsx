@@ -11,6 +11,8 @@ import Header from './Header';
 import MainMenu from './MainMenu';
 import Login from './Login';
 import TransactionDialog from './TransactionDialog';
+import EditDialog from './EditDialog.jsx';
+import {Dialogs} from '../constants/Constants';
 
 class App extends React.Component {
     static getStores() {
@@ -89,11 +91,17 @@ class App extends React.Component {
 
         if (this.state.isLoggedIn) {
             let modal = null;
-            if (this.state.currentModal === 'Transaction') {
+            if (this.state.currentModal === Dialogs.Transaction) {
                 modal = (
                     <TransactionDialog
                         userProfile={this.state.userProfile}
                         editTransaction={this.state.editTransaction}
+                    />
+                );
+            } else if (this.state.currentModal === Dialogs.Edit) {
+                modal = (
+                    <EditDialog
+                        tags={this.state.userProfile.tags}
                     />
                 );
             }

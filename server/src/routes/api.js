@@ -83,6 +83,10 @@ router.put('/transactions', function (req, res) {
         });
 });
 
+router.put('/tags/:userId', function(req, res) {
+
+});
+
 router.post('/login', function (req, res) {
     let {username, password} = req.body;
     let profile = {

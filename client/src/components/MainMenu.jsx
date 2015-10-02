@@ -1,18 +1,21 @@
 import React from 'react';
 import classNames from 'classnames';
 import UiActions from '../actions/UiActions';
+import {Pages} from '../constants/Constants';
 
 export default class MainMenu extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            selectedItem: this.props.selectedItem || 'Home'
+            selectedItem: this.props.selectedItem || Pages.Home
         };
-        this.homeClicked = UiActions.setPage.bind(null, 'Home');
-        this.imagesClicked = UiActions.setPage.bind(this, 'Images');
-        this.buttonsClicked = UiActions.setPage.bind(this, 'Buttons');
-        this.transactionsClicked = UiActions.setPage.bind(this, 'Transactions');
+        this.bound = {
+            goHome: UiActions.setPage.bind(null, Pages.Home),
+            goTransactions:  UiActions.setPage.bind(null, Pages.Transactions),
+            goForecasting: UiActions.setPage.bind(null, Pages.Forecasting),
+            goBudget: UiActions.setPage.bind(null, Pages.Budget)
+        };
     }
 
     /**
@@ -35,24 +38,24 @@ export default class MainMenu extends React.Component {
                 <a className="pure-menu-heading" href="#">My Finances</a>
 
                 <ul className="pure-menu-list">
-                    <li className={menuItemClass('Home')}>
+                    <li className={menuItemClass(Pages.Home)}>
                         <a href="#" className="pure-menu-link"
-                            onClick={this.homeClicked}>Home</a>
+                            onClick={this.bound.goHome}>Home</a>
                     </li>
 
-                    <li className={menuItemClass('Transactions')}>
+                    <li className={menuItemClass(Pages.Transactions)}>
                         <a href="#" className="pure-menu-link"
-                           onClick={this.transactionsClicked}>Transactions</a>
+                           onClick={this.bound.goTransactions}>Transactions</a>
                     </li>
 
-                    <li className={menuItemClass('Images', true)}>
+                    <li className={menuItemClass(Pages.Forecasting)}>
                         <a href="#" className="pure-menu-link"
-                           onClick={this.imagesClicked}>Images</a>
+                           onClick={this.bound.goForecasting}>Forecasting</a>
                     </li>
 
-                    <li className={menuItemClass('Buttons')}>
+                    <li className={menuItemClass(Pages.Budget)}>
                         <a href="#" className="pure-menu-link"
-                           onClick={this.buttonsClicked}>Buttons</a>
+                           onClick={this.bound.goBudget}>Budget</a>
                     </li>
 
                 </ul>

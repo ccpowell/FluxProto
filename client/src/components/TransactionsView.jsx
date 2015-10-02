@@ -107,6 +107,11 @@ export default class TransactionsView extends React.Component {
                         cellRenderer={TransactionsView.renderMoneyCell}
                     />
                     <Column
+                        label="Category"
+                        width={200}
+                        dataKey="category"
+                    />
+                    <Column
                         label="From"
                         width={200}
                         dataKey="accountFrom"

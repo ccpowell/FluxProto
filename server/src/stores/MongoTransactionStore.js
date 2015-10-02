@@ -1,5 +1,4 @@
 import * as _ from 'lodash';
-import TodoModel from '../models/TodoModel';
 let mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 
@@ -58,7 +57,7 @@ export class TransactionStore {
 
     /**
      * @description Create a new TransactionModel
-     * @param text {string} body
+     * @param transaction {TransactionModel} body
      * @returns {TransactionModel} created TransactionModel
      */
     create(transaction) {
@@ -68,7 +67,7 @@ export class TransactionStore {
 
     /**
      * @description update transaction
-     * @param {TransactionModel} Transaction
+     * @param transaction {TransactionModel} Transaction
      */
     update(transaction) {
         let id = transaction.id;

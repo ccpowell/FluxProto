@@ -1,5 +1,7 @@
 import React from 'react';
 import TransactionsView from './TransactionsView';
+import uiActions from '../actions/UiActions';
+import {Pages} from '../constants/Constants';
 
 export default class Content extends React.Component {
 
@@ -12,7 +14,7 @@ export default class Content extends React.Component {
      */
     render() {
         console.log('render Content');
-        if (this.props.selectedPage === 'Images') {
+        if (this.props.selectedPage === Pages.Budget) {
             return (
                 <div className="content">
                     <h2>Images</h2>
@@ -43,14 +45,16 @@ export default class Content extends React.Component {
             );
         }
 
-        if (this.props.selectedPage === 'Buttons') {
+        if (this.props.selectedPage === Pages.Forecasting) {
             return (
                 <div className="content">
 
                     <h2>Buttons</h2>
 
                     <div>
-                        <button className="pure-button pure-button-primary">
+                        <button
+                            onClick={uiActions.showEdit}
+                            className="pure-button pure-button-primary">
                             <i className="fa fa-television"></i>
                             Push It!
                         </button>

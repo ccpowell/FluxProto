@@ -70,6 +70,15 @@ let UiActions = {
     },
 
     /**
+     * show an Edit box
+     */
+    showEdit: function() {
+        AppDispatcher.dispatch({
+            type: Constants.SHOW_EDIT
+        });
+    },
+
+    /**
      * close the current modal
      */
     closeModal: function() {
