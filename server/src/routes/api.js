@@ -3,6 +3,7 @@
 import * as express from 'express';
 import * as parser from 'body-parser';
 import transactions from '../stores/MongoTransactionStore';
+import users from '../stores/MongoUserStore';
 
 var router = express.Router();
 router.use(parser.json());
@@ -83,19 +84,27 @@ router.put('/transactions', function (req, res) {
         });
 });
 
-router.put('/tags/:userId', function(req, res) {
-
+router.put('/profile/:userId', function(req, res) {
+    users.updateProfile(req.params.userId, req.body)
+        .then(function(profile) {
+            res.json(profile);
+        })
+        .catch(function (err) {
+            console.log(err);
+            res.sendStatus(500);
+        });
 });
 
 router.post('/login', function (req, res) {
     let {username, password} = req.body;
-    let profile = {
-        userId: username,
-        categories: ['Transfer', 'House', 'Car', 'Food', 'Utilities', 'Telephone & Internet', 'Clothing'],
-        tags: ['Restaurant', 'Networking'],
-        accounts: ['Wells Fargo Checking', 'Wells Fargo Savings', 'Overdrawn AmEx', 'Citibank Visa', 'Out of my Hands']
-    };
-    res.json(profile);
+    users.login(username, password)
+        .then(function(profile) {
+            res.json(profile);
+        })
+        .catch(function (err) {
+            console.log(err);
+            res.sendStatus(500);
+        });
 });
 
 export {router as default};

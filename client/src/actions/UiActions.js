@@ -28,6 +28,20 @@ let UiActions = {
         return token;
     },
 
+    updateTags(token, tags) {
+        web.updateProfile(token, {tags});
+    },
+
+
+    updateAccounts(token, accounts) {
+        web.updateProfile(token, {accounts});
+    },
+
+
+    updateCategories(token, categories) {
+        web.updateProfile(token, {categories});
+    },
+
     /**
      * Log in using the web api
      * @param token {string} token to wait for
@@ -125,11 +139,24 @@ let UiActions = {
     /**
      * received a user profile
      * @param token {string} correlation token
-     * @param payload {Transaction[]} list of transactions
+     * @param payload {UserProfile} configuration for user
      */
     loggedIn: function (token, payload) {
         AppDispatcher.dispatch({
             type: Constants.LOGIN_SUCCESS,
+            token,
+            payload
+        });
+    },
+
+    /**
+     * received a user profile
+     * @param token {string} correlation token
+     * @param payload {UserProfile} configuration for user
+     */
+    profileSuccess: function (token, payload) {
+        AppDispatcher.dispatch({
+            type: Constants.PROFILE_SUCCESS,
             token,
             payload
         });

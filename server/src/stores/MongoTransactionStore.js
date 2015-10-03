@@ -1,9 +1,6 @@
 import * as _ from 'lodash';
-let mongoose = require('mongoose');
-mongoose.Promise = require('bluebird');
+import mongoose from './MongoDb';
 
-mongoose.connect('mongodb://localhost/HomeFinance');
-let db = mongoose.connection;
 let schema = mongoose.Schema({
     userId: String,
     description: String,

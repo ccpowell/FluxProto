@@ -52,7 +52,7 @@ export default class Header extends React.Component {
                         <button
                             className="pure-button pure-button-primary"
                             onClick={this.bound.tryLogin}>
-                            Save
+                            Log In
                         </button>
                     </div>
                 </form>

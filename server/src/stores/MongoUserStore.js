@@ -1,10 +1,5 @@
 import * as _ from 'lodash';
-import TodoModel from '../models/TodoModel';
-let mongoose = require('mongoose');
-mongoose.Promise = require('bluebird');
-
-mongoose.connect('mongodb://localhost/HomeFinance');
-let db = mongoose.connection;
+import mongoose from './MongoDb';
 
 // id is userId
 let userSchema = mongoose.Schema({
@@ -34,11 +29,25 @@ export class UserStore {
      */
     login(userName, password) {
         return UserDoc.findOne({
-            userName: userName,
-            password: password
-        },{_id: 1}).exec()
-            .then(function (u) {
-                return ProfileDoc.findById(u._id).exec();
+            userName: userName
+        }).exec()
+            .then(u => {
+                if (u.password !== password) {
+                    throw 'password invalid'
+                }
+                return this.getProfileById(u._id);
+            });
+    }
+
+    getProfileById(id) {
+        return ProfileDoc.findById(id).exec()
+            .then(profile => {
+                return {
+                    userId: profile.id,
+                    tags: profile.tags,
+                    accounts: profile.accounts,
+                    categories: profile.categories
+                };
             });
     }
 
@@ -48,24 +57,39 @@ export class UserStore {
      */
     deleteUserById(id) {
         return UserDoc.findByIdAndRemove(id).exec()
-            .then(ProfileDoc.findByIdAndRemove(id).exec());
+            .then(() => ProfileDoc.findByIdAndRemove(id).exec());
     }
 
     /**
      * @description Create a new user and profile
      * @param user {User} user and password
-     * @returns {Profile} created profile
+     * @returns {ObjectId} created user and profile id
      */
     createUser(user) {
         let userDoc = new UserDoc(user);
-        return userDoc.save().then(function (created) {
-            console.log('created user doc');
-            return new ProfileDoc({
-                _id: created._id,
-                categories: ['House', 'Car', 'Phone', 'Utilities']
-            }).save();
-        });
+        return userDoc.save()
+            .then(created => {
+                console.log('created user doc ' + created);
+                return new ProfileDoc({
+                    _id: created._id,
+                    categories: [],
+                    tags: [],
+                    accounts: []
+                }).save()
+            })
+            .then(np => np._id);
     }
+
+    /**
+     * Set tags for a user
+     * @param id
+     * @param tags
+     */
+    updateProfile(id, update) {
+        return ProfileDoc.findByIdAndUpdate(id, update).exec()
+            .then(p => this.getProfileById(id));
+    }
+
 }
 var store = new UserStore();
 export {store as default};

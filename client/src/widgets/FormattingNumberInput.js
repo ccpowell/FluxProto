@@ -1,7 +1,8 @@
 'use strict';
 
-var TextInput = require('newforms/TextInput');
+let TextInput = require('newforms/TextInput');
 let numeral = require('numeral');
+let is = require('isomorph/is')
 
 /**
  * An HTML <input type="number"> widget.
@@ -19,12 +20,10 @@ var FormattingNumberInput = TextInput.extend({
 
     inputType: 'number',
 
-    // it may not be a valid number, so we try to convert it
-    // if nfg, just return the value
+    // we only format the initial time, when this is a number
     _formatValue(value) {
-        let parsed = parseFloat(value);
-        if (parsed !== NaN) {
-            return numeral(parsed).format('0,0.00');
+        if (is.Number(value)) {
+            return numeral(value).format('0,0.00');
         }
         return value;
     }

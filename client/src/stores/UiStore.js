@@ -28,13 +28,24 @@ class UiStore extends Store {
         return this.state;
     }
 
+    getUserId() {
+        return this.state.userId
+    }
+
+    modalSuccess(token) {
+        if (this.state.currentModalToken === token) {
+            this.state.currentModalToken = null;
+            this.state.currentModal = null;
+        }
+        _.remove(this.state.asyncInProgress, {token});
+    }
     __onDispatch(action) {
 
         console.log(action);
 
         switch (action.type) {
             case Constants.CURRENT_MODAL_WAITING:
-                this.state.currentModalToken = action.token;
+                this.state.currentModalToken = (action.token);
                 this.state.currentModalError = null;
                 this.__emitChange();
                 break;
@@ -83,22 +94,18 @@ class UiStore extends Store {
             // use correlation token
             // listen to all network operations
             case Constants.ASYNC_SUCCESS:
-                if (this.state.currentModalToken === action.token) {
-                    this.state.currentModalToken = null;
-                    this.state.currentModal = null;
-                }
-                _.remove(this.state.asyncInProgress, {token: action.token});
+                this.modalSuccess(action.token);
                 this.__emitChange();
                 break;
 
             // use correlation token
             // listen to all network operations
             case Constants.ASYNC_FAILURE:
-                if (this.state.currentModalToken === action.token) {
+                if (this.state.currentModalToken === (action.token)) {
                     this.state.currentModalToken = null;
                     this.state.currentModalError = action.payload.toString();
                 }
-                _.remove(this.state.asyncInProgress, {token: action.token});
+                _.remove(this.state.asyncInProgress, {token: (action.token)});
                 this.__emitChange();
                 break;
 
@@ -108,11 +115,7 @@ class UiStore extends Store {
                 break;
 
             case Constants.TRANSACTIONS_SUCCESS:
-                if (this.state.currentModalToken === action.token) {
-                    this.state.currentModalToken = null;
-                    this.state.currentModal = null;
-                }
-                _.remove(this.state.asyncInProgress, {token: action.token});
+                this.modalSuccess(action.token);
 
                 // instead of immutable, just add an ID for the set
                 // be sure to check the ID!
@@ -123,14 +126,22 @@ class UiStore extends Store {
 
             case Constants.LOGIN_SUCCESS:
                 // not sure login counts as a modal...
-                if (this.state.currentModalToken === action.token) {
-                    this.state.currentModalToken = null;
-                    this.state.currentModal = null;
-                }
-                _.remove(this.state.asyncInProgress, {token: action.token});
+                this.modalSuccess(action.token);
 
                 this.state.userProfile = action.payload;
                 this.state.userId = this.state.userProfile.userId;
+                this.__emitChange();
+                break;
+
+            case Constants.PROFILE_SUCCESS:
+                if (action.payload.userId !== this.state.userProfile.userId) {
+                    console.log('ERROR: incorrect profile returned from server')
+                    return;
+                }
+
+                this.modalSuccess(action.token);
+
+                this.state.userProfile = action.payload;
                 this.__emitChange();
                 break;
         }

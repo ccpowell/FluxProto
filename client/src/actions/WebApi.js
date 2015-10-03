@@ -22,7 +22,8 @@ function isError(error, response) {
 }
 
 // make a curried response handler for a transaction operation
-// they all end successfully in TRANSACTIONS_SUCCESS
+// they all end successfully in TRANSACTIONS_SUCCESS, or
+// fail with ASYNC_FAILURE
 function handleFetch(token) {
     return (error, response, data) => {
         let badNews = isError(error, response);
@@ -35,12 +36,26 @@ function handleFetch(token) {
     }
 }
 
+// make a curried response handler for a transaction operation
+// they all end successfully in PROFILE_SUCCESS, or
+// fail with ASYNC_FAILURE
+function handleProfileFetch(token) {
+    return (error, response, data) => {
+        let badNews = isError(error, response);
+        if (badNews) {
+            console.log('web operation failed', badNews);
+            uiActions.failure(token, badNews);
+        } else {
+            uiActions.profileSuccess(token, data);
+        }
+    }
+}
+
 class WebApi {
 
     createTransaction(token, transaction) {
         transactionActions.start(token);
-
-        transaction.userId = uiStore.getState().userId;
+        transaction.userId = uiStore.getUserId();
         request.post({url: '/api/transactions', json: transaction}, handleFetch(token));
     }
 
@@ -50,10 +65,18 @@ class WebApi {
         request.put({url: '/api/transactions', json: transaction}, handleFetch(token));
     }
 
+
+    updateProfile(token, update) {
+        transactionActions.start(token);
+
+        let userId = uiStore.getUserId();
+        request.put({url: '/api/profile/'+userId, json: update}, handleProfileFetch(token));
+    }
+
     getTransactions(token) {
         transactionActions.start(token);
 
-        let userId = uiStore.getState().userId;
+        let userId = uiStore.getUserId();
         let uri = '/api/transactions/user/' + userId;
         request.get({uri, json: true}, handleFetch(token));
     }

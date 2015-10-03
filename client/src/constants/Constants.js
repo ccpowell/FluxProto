@@ -10,6 +10,7 @@ export const ASYNC_FAILURE = 'ASYNC_FAILURE';
 // successes are identified for quick processing
 export const TRANSACTIONS_SUCCESS = 'TRANSACTIONS_SUCCESS';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const PROFILE_SUCCESS = 'PROFILE_SUCCESS';
 
 export const SET_PAGE = 'SET_PAGE';
 export const EDIT_TRANSACTION = 'EDIT_TRANSACTION';
