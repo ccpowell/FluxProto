@@ -38,11 +38,9 @@ export default class TransactionDialog extends React.Component {
             }
         }
 
-        let accountChoices = this.props.userProfile.accounts.map(a => [a, a]);
-        accountChoices.unshift([null, '']);
-        let categoryChoices = this.props.userProfile.categories.map(c => [c, c]);
-        categoryChoices.unshift([null, '']);
-        let tagChoices = this.props.userProfile.tags.map(t => [t, t]);
+        let accountChoices = [''].concat(this.props.userProfile.accounts);
+        let categoryChoices = [''].concat(this.props.userProfile.categories);
+        let tagChoices = this.props.userProfile.tags;
         let TransactionForm = forms.Form.extend({
             date: forms.DateField({
                 widget: forms.DateInput({format: '%m/%d/%Y'}),
@@ -79,9 +77,15 @@ export default class TransactionDialog extends React.Component {
             })
         });
 
-
+        let form = new TransactionForm({
+          controlled:true,
+          onChange:this.bound.onFormChange,
+          labelSuffix:"",
+          initial:initialTransaction,
+          data: transaction
+        });
         this.state = {
-            form: TransactionForm,
+            form: form,
             transaction,
             initialTransaction,
             title
@@ -91,7 +95,7 @@ export default class TransactionDialog extends React.Component {
     trySaveTransaction(e) {
         e.preventDefault();
 
-        let form = this.refs.transactionForm.getForm();
+        let form = this.state.form;
         let isValid = form.validate();
         console.log('isValid ' + isValid);
 
@@ -116,7 +120,7 @@ export default class TransactionDialog extends React.Component {
 
     onFormChange() {
         console.log('form changed');
-        let form = this.refs.transactionForm.getForm();
+        let form = this.state.form;
         if (form.cleanedData.category === 'Transfer') {
             form.fields.accountTo.cssClass = 'pure-control-group';
             form.fields.accountTo.required = true;
@@ -133,6 +137,16 @@ export default class TransactionDialog extends React.Component {
     render() {
         console.log('render TransactionDialog');
 
+let foo = (
+  <forms.RenderForm
+      controlled={true}
+      onChange={this.bound.onFormChange}
+      labelSuffix=""
+      form={this.state.form}
+      data={this.state.transaction}
+      initial={this.state.initialTransaction}
+      ref="transactionForm"/>
+  );
         return (
             <div>
                 <ModalContainer>
@@ -148,14 +162,7 @@ export default class TransactionDialog extends React.Component {
                             className="pure-form pure-form-aligned">
 
                             <forms.RenderForm
-                                controlled={true}
-                                onChange={this.bound.onFormChange}
-                                labelSuffix=""
-                                form={this.state.form}
-                                data={this.state.transaction}
-                                initial={this.state.initialTransaction}
-                                ref="transactionForm"/>
-
+                              form={this.state.form}/>
                             <div className="pure-controls">
                                 <button
                                     className="pure-button pure-button-primary"

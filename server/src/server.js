@@ -6,7 +6,7 @@ var app = express();
 
 app.use(logger('tiny'));
 app.use('/api', api);
-app.use(express.static('./client/dist'));
+app.use(express.static('../client/dist'));
 
 var server = app.listen(3000, function () {
     var host = server.address().address;

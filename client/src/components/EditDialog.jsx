@@ -28,7 +28,7 @@ export default class EditDialog extends React.Component {
 
     onTagTextChanged(event) {
         event.preventDefault();
-        let newTag = (event.target.value || '').toLowerCase().match(/[a-z]/g).join('');
+        let newTag = (event.target.value || '').match(/[a-z0-9]/gi).join('');
         let newTagValid = newTag && newTag.length > 1 && !_.any(this.state.tags, t => (t === newTag));
         this.setState({newTag, newTagValid});
     }

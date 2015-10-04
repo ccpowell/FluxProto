@@ -5,7 +5,7 @@ var userStore = require('../server/dist/stores/MongoUserStore')["default"];
 var mongoose = require('../server/dist/stores/MongoDb');
 
 userStore.createUser({
-        userName: 'ossbsall',
+        userName: 'doofus',
         password: 'dummy'
     })
     .then(function (userId) {
@@ -13,7 +13,7 @@ userStore.createUser({
         return userStore.updateProfile(userId, {
             tags: ['abra', 'cadabra'],
             accounts: ['Wells Fargo Checking', 'Citi Visa'],
-            categories: ['House', 'Telephone']
+            categories: ['House', 'Telephone', 'Transfer']
         });
     })
     .then(function (p) {
