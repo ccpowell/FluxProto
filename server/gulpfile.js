@@ -19,5 +19,3 @@ gulp.task("server-js", function () {
 gulp.task('server', function (cb) {
     runSequence('clean-server', 'server-js', cb);
 });
-
-gulp.task("default", ['server']);
