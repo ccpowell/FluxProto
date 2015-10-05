@@ -53,7 +53,7 @@ export default class TransactionDialog extends React.Component {
                 cssClass: 'pure-control-group short',
                 decimalPlaces: 2,
                 widget: FormattingNumberInput()
-            }),
+              }),
             category: forms.ChoiceField({
                 choices: categoryChoices,
                 cssClass: 'pure-control-group',
@@ -137,16 +137,6 @@ export default class TransactionDialog extends React.Component {
     render() {
         console.log('render TransactionDialog');
 
-let foo = (
-  <forms.RenderForm
-      controlled={true}
-      onChange={this.bound.onFormChange}
-      labelSuffix=""
-      form={this.state.form}
-      data={this.state.transaction}
-      initial={this.state.initialTransaction}
-      ref="transactionForm"/>
-  );
         return (
             <div>
                 <ModalContainer>
@@ -160,7 +150,6 @@ let foo = (
                         {this.state.title}
                         <form
                             className="pure-form pure-form-aligned">
-
                             <forms.RenderForm
                               form={this.state.form}/>
                             <div className="pure-controls">

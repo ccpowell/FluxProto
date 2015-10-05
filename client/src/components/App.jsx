@@ -11,7 +11,7 @@ import Header from './Header';
 import MainMenu from './MainMenu';
 import Login from './Login';
 import TransactionDialog from './TransactionDialog';
-import EditDialog from './EditDialog.jsx';
+import TagsDialog from './TagsDialog';
 import {Dialogs} from '../constants/Constants';
 
 class App extends React.Component {
@@ -100,7 +100,7 @@ class App extends React.Component {
                 );
             } else if (this.state.currentModal === Dialogs.Edit) {
                 modal = (
-                    <EditDialog
+                    <TagsDialog
                         tags={this.state.userProfile.tags}
                     />
                 );
@@ -138,4 +138,3 @@ class App extends React.Component {
 }
 
 export default Container.create(App);
-
